@@ -12,8 +12,16 @@ class ansible::install (
   }
 
   package { 'ansible':
-    ensure   => installed,
-    provider => 'pip3',
-    require  => Package[$dependencies],
+    ensure          => installed,
+    provider        => 'pip3',
+    install_options => ['--break-system-packages'],
+    require         => Package[$dependencies],
+  }
+
+  package { 'jinja2':
+    ensure          => latest,
+    provider        => 'pip3',
+    install_options => ['--break-system-packages'],
+    require         => Package['ansible'],
   }
 }
