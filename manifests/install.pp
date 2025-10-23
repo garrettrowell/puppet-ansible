@@ -11,17 +11,22 @@ class ansible::install (
     ensure => installed,
   }
 
+  $pip_options = $facts['os']['release']['major'] ? {
+    '24.04' => ['--break-system-packages'],
+    default => undef,
+  }
+
   package { 'ansible':
     ensure          => installed,
     provider        => 'pip3',
-    install_options => ['--break-system-packages'],
+    install_options => $pip_options,
     require         => Package[$dependencies],
   }
 
   package { 'jinja2':
     ensure          => latest,
     provider        => 'pip3',
-    install_options => ['--break-system-packages'],
+    install_options => $pip_options,
     require         => Package['ansible'],
   }
 }
